@@ -6,10 +6,10 @@
           <h1>To-Do APP With Vue.js Apollo and GraphQL</h1>
           <form>
             <div class="form-group">
-              <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Title">
+              <input type="email" class="form-control" id="title" placeholder="Title">
             </div>
             <div class="form-group">
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+              <textarea class="form-control" id="todo" rows="3"></textarea>
             </div>
             <button type="button" class="btn btn-secondary btn-lg btn-block">Block level button</button>
           </form>
@@ -18,41 +18,50 @@
     </div>
     
     <div class="row">
-        <!-- <div class="container mt-4">
+      <div class="container mt-4">
         <div class="row">
-          <div class="col-md-4">
-            <div class="card">
-              <div class="card-body">
-                <h1>hello word</h1>
+          <div v-for="book in books" :key="book.id">
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  {{book}}
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="card">
-              <div class="card-body">
-                <h1>hello word</h1>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card">
-              <div class="card-body">
-                <h1>hello word</h1>
-              </div>
-            </div>
           </div>
         </div>
-      </div> -->
     </div>
+
   </div>
 </template>
 
 <script>
+import gql from 'graphql-tag'
+
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+  data(){
+    return{
+      books:'',
+    }
+  },
+
+  apollo:{
+    books:{
+      query: gql`
+        query {
+          books{
+            title,
+            author,
+            description
+          }
+        }
+      `,
+    }
   }
+
+
+  // this.books = this.$apollo.queries.books
 }
 </script>
 
