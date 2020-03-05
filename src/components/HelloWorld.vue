@@ -3,15 +3,18 @@
     <div class="row">
       <div class="container">
         <div class="col-md-12">
-          <h1>To-Do APP With Vue.js Apollo and GraphQL</h1>
-          <form>
+          <h1>Book Listing APP With Vue.js Apollo and GraphQL</h1>
+          <form >
             <div class="form-group">
-              <input type="email" class="form-control" id="title" placeholder="Title">
+              <input type="text" v-model="title" class="form-control" id="title" placeholder="Title">
             </div>
             <div class="form-group">
-              <textarea class="form-control" id="todo" rows="3"></textarea>
+              <input type="text" v-model="author"  class="form-control" id="author" placeholder="Author">
             </div>
-            <button type="button" class="btn btn-secondary btn-lg btn-block">Block level button</button>
+            <div class="form-group">
+              <textarea v-model="description" class="form-control" id="description" rows="3"></textarea>
+            </div>
+            <button @click="addBook(title, author, description)" type="button" class="btn btn-secondary btn-lg btn-block">Add todo</button>
           </form>
         </div>
       </div>
@@ -19,18 +22,22 @@
     
     <div class="row">
       <div class="container mt-4">
-        <div class="row">
-          <div v-for="book in books" :key="book.id">
-            <div class="col-md-4">
-              <div class="card">
-                <div class="card-body">
-                  {{book}}
+        <div v-for="book in books" :key="book.id">
+          <div class="col-md-12">
+            <div class="">
+                <div class="card">
+                  <div class="card-body">
+                    Title:{{book.title}}
+                    <hr>
+                    Author:{{book.author}}
+                    Descroption{{book.description}}
+                  </div>
                 </div>
-              </div>
             </div>
           </div>
-          </div>
+          <br>
         </div>
+      </div>
     </div>
 
   </div>
@@ -40,9 +47,14 @@
 import gql from 'graphql-tag'
 
 export default {
+  name: 'mainApp',
   data(){
     return{
       books:'',
+
+      title:'',
+      author:'',
+      description:''
     }
   },
 
@@ -58,10 +70,37 @@ export default {
         }
       `,
     }
+  },
+
+  methods:{
+    addBook(title, author, description){
+      this.$apollo.mutate({
+        
+        mutation: gql`
+            mutation addBook($title:String!, $author:String!, $description:String!){
+              addBook(title: $title,author:$author,description:$description){
+                title,
+                author,
+                description
+              }
+            }
+          `,
+          variables: {
+            title: title,
+            author: author,
+            description: description
+          }
+      })
+      .then(response => {
+        console.log(response)
+      })
+      // location.reload()
+      console.log(title)
+    }
   }
 
+  
 
-  // this.books = this.$apollo.queries.books
 }
 </script>
 
