@@ -14,7 +14,7 @@
             <div class="form-group">
               <textarea v-model="description" class="form-control" id="description" rows="3"></textarea>
             </div>
-            <button @click="addBook(title, author, description)" type="button" class="btn btn-secondary btn-lg btn-block">Add todo</button>
+            <button @click="createBook" type="button" class="btn btn-secondary btn-lg btn-block">Add todo</button>
           </form>
         </div>
       </div>
@@ -33,6 +33,7 @@
                     Descroption{{book.description}}
                   </div>
                 </div>
+                
             </div>
           </div>
           <br>
@@ -73,12 +74,12 @@ export default {
   },
 
   methods:{
-    addBook(title, author, description){
+    createBook(){
       this.$apollo.mutate({
         
         mutation: gql`
-            mutation addBook($title:String!, $author:String!, $description:String!){
-              addBook(title: $title,author:$author,description:$description){
+            mutation createBook($title:String!, $author:String!, $description:String!){
+              createBook(title: $title, author:$author, description:$description){
                 title,
                 author,
                 description
@@ -86,17 +87,16 @@ export default {
             }
           `,
           variables: {
-            title: title,
-            author: author,
-            description: description
+            title: this.title,
+            author: this.author,
+            description: this.description
           }
       })
       .then(response => {
-        console.log(response)
+        this.books = response.data.createBook
+        location.reload()
       })
-      // location.reload()
-      console.log(title)
-    }
+    },
   }
 
   
